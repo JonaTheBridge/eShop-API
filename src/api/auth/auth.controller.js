@@ -13,8 +13,10 @@ async function login(req, res) {
   try {
     token = await authBll.login({ username, password });
   } catch (err) {
-    res.status(err.status);
-    res.send(err.message);
+    const myError = JSON.parse(err.message);
+    res.status(myError.status);
+    res.send(myError.message);
+    return;
   }
 
   res.json({ token });
@@ -33,9 +35,10 @@ async function register(req, res) {
   try {
     token = await authBll.register({ username, email, password });
   } catch (err) {
-    console.error(err);
-    res.status(500);
-    res.send(err.message);
+    const myError = JSON.parse(err.message);
+    res.status(myError.status);
+    res.send(myError.message);
+    return;
   }
 
   res.json({ token });

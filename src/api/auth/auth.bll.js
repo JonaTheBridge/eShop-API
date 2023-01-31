@@ -19,17 +19,32 @@ function getToken(user) {
 async function login({ username, password }) {
   const dbUser = await usersRepository.getByUsername({ username });
   if (!dbUser) {
-    throw new Error('Wrong credentials');
+    const myError = {
+      status: 401,
+      message: 'Wrong credentials',
+    };
+
+    throw new Error(JSON.stringify(myError));
   }
 
   const isSamePassword = compareSync(password, dbUser.password);
   if (!isSamePassword) {
-    throw new Error('Wrong credentials');
+    const myError = {
+      status: 401,
+      message: 'Wrong credentials',
+    };
+
+    throw new Error(JSON.stringify(myError));
   }
 
   const token = getToken({ username: dbUser.username, _id: dbUser._id });
   if (!token) {
-    throw new Error('Some problem generating token');
+    const myError = {
+      status: 500,
+      message: 'Some problem generating token',
+    };
+
+    throw new Error(JSON.stringify(myError));
   }
 
   return token;
@@ -39,12 +54,22 @@ async function register({ username, email, password }) {
   const hashedPassword = hashSync(password, 10);
   const dbUser = await usersRepository.insert({ username, email, password: hashedPassword });
   if (!dbUser) {
-    throw new Error('Some problem at insert');
+    const myError = {
+      status: 500,
+      message: 'Some problem at insert',
+    };
+
+    throw new Error(JSON.stringify(myError));
   }
 
   const token = getToken({ username: dbUser.username, _id: dbUser._id });
   if (!token) {
-    throw new Error('Some problem generating token');
+    const myError = {
+      status: 500,
+      message: 'Some problem generating token',
+    };
+
+    throw new Error(JSON.stringify(myError));
   }
 
   return token;
