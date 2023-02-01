@@ -1,8 +1,8 @@
 function middleware(request, response, next) {
   const { query } = request;
   console.info(`Middleware listening petition:
-    USER: ${request.user}
-    ROLE: ${request.role}
+    USER: ${request.user?.username}
+    ROLE: ${request.user?.role}
     METHOD: ${request.method}
     URL: ${request.url}
     QUERY: `, query);
