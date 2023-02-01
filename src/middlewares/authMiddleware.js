@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import * as usersBll from '../api/users/users.bll.js';
 import unauthorized from '../utils/unauthorized.js';
 
 function middleware(request, response, next) {
@@ -20,20 +21,13 @@ function middleware(request, response, next) {
     return;
   }
 
-  jwt.verify(token, process.env.AUTH_SECRET_KEY, (error, payload) => {
+  jwt.verify(token, process.env.AUTH_SECRET_KEY, async (error, payload) => {
     if (error) {
       console.error('ERROR!', error.message);
       return unauthorized(response);
     }
 
-    request.username = payload.username;
-    request.userId = payload.userId;
-
-    // const username = payload.username;
-    // const user = usersBll.getByUsername(username);
-    // request.user = user;
-    // user.permissions.characters.all || user.role.superadmin
-    // // request.userId = payload.id;
+    request.user = await usersBll.getById({ id: payload.userId });
     return next();
   });
 }
