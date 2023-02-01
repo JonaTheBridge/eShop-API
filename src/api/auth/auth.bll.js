@@ -5,7 +5,6 @@ import * as usersRepository from '../users/users.repository.js';
 function getToken(user) {
   const payload = {
     userId: user._id,
-    username: user.username,
   };
 
   const token = jwt.sign(payload, process.env.AUTH_SECRET_KEY, {
@@ -17,7 +16,8 @@ function getToken(user) {
 }
 
 async function login({ username, password }) {
-  const dbUser = await usersRepository.getByUsername({ username });
+  const options = { password: true };
+  const dbUser = await usersRepository.getByUsername({ username }, options);
   if (!dbUser) {
     const myError = {
       status: 401,
