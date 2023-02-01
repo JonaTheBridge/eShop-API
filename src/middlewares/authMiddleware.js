@@ -1,9 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-function unauthorized(response) {
-  response.status(401);
-  response.send('Unauthorized');
-}
+import unauthorized from '../utils/unauthorized.js';
 
 function middleware(request, response, next) {
   const publicRoutes = [
